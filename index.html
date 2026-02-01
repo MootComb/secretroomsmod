@@ -1,0 +1,846 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Rooms Unofficial | Advanced Camouflage Mod</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #13131a;
+            --surface-light: #1a1a24;
+            --primary: #00ff88;
+            --modrinth: #1bd96a;
+            --curseforge: #f16436;
+            --discord: #5865f2;
+            --youtube: #ff0000;
+            --text-main: #ffffff;
+            --text-dim: #a0a0b0;
+            --border: rgba(255, 255, 255, 0.1);
+            --glow-primary: rgba(0, 255, 136, 0.3);
+            --glow-modrinth: rgba(27, 217, 106, 0.3);
+            --glow-curseforge: rgba(241, 100, 54, 0.3);
+            --glow-discord: rgba(88, 101, 242, 0.3);
+            --glow-youtube: rgba(255, 0, 0, 0.3);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        html {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(88, 101, 242, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(241, 100, 54, 0.1) 0%, transparent 50%);
+            animation: bgShift 15s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, -20px) scale(1.1); }
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 24px; 
+            position: relative;
+            width: 100%;
+        }
+
+        nav {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand { 
+            font-weight: 900; 
+            font-size: 1.4rem; 
+            letter-spacing: -1px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), #00d9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand i { 
+            color: var(--primary); 
+            font-size: 1.6rem;
+            filter: drop-shadow(0 0 10px var(--glow-primary));
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 10px 20px;
+            border: 2px solid;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .discord-link {
+            color: var(--discord);
+            border-color: var(--discord);
+        }
+
+        .discord-link:hover {
+            background: var(--discord);
+            color: white;
+            box-shadow: 0 0 20px var(--glow-discord);
+            transform: translateY(-2px);
+        }
+
+        .youtube-link {
+            color: var(--youtube);
+            border-color: var(--youtube);
+        }
+
+        .youtube-link:hover {
+            background: var(--youtube);
+            color: white;
+            box-shadow: 0 0 20px var(--glow-youtube);
+            transform: translateY(-2px);
+        }
+
+        .hero { 
+            padding: 80px 0 120px; 
+            text-align: center;
+        }
+
+        .version-badges { 
+            display: flex; 
+            gap: 12px; 
+            margin-bottom: 32px; 
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: var(--surface-light);
+            border: 2px solid var(--border);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .badge:hover::before {
+            left: 100%;
+        }
+
+        .badge.active { 
+            border-color: var(--primary); 
+            color: var(--primary); 
+            background: rgba(0, 255, 136, 0.1);
+            box-shadow: 0 0 20px var(--glow-primary);
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -3px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 50%, #00d9ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px var(--glow-primary)); }
+            50% { filter: drop-shadow(0 0 40px var(--glow-primary)); }
+        }
+
+        .subtitle { 
+            font-size: 1.3rem; 
+            color: var(--text-dim); 
+            max-width: 800px; 
+            margin: 0 auto 48px; 
+            line-height: 1.8;
+        }
+
+        .port-notice {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 48px;
+            font-size: 14px;
+            color: var(--text-dim);
+            backdrop-filter: blur(10px);
+        }
+
+        .port-notice strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .download-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; 
+            max-width: 900px;
+            margin: 0 auto 60px;
+        }
+
+        .download-btn {
+            padding: 24px 32px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            border: 2px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .download-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .download-btn i {
+            font-size: 32px;
+            z-index: 1;
+        }
+
+        .download-btn span {
+            z-index: 1;
+        }
+
+        .btn-modrinth { 
+            background: rgba(27, 217, 106, 0.1); 
+            color: var(--modrinth); 
+            border-color: var(--modrinth);
+        }
+
+        .btn-modrinth::before {
+            background: var(--modrinth);
+        }
+
+        .btn-modrinth:hover { 
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px var(--glow-modrinth);
+            color: white;
+        }
+
+        .btn-curseforge { 
+            background: rgba(241, 100, 54, 0.1); 
+            color: var(--curseforge); 
+            border-color: var(--curseforge);
+        }
+
+        .btn-curseforge::before {
+            background: var(--curseforge);
+        }
+
+        .btn-curseforge:hover { 
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px var(--glow-curseforge);
+            color: white;
+        }
+
+        .btn-source { 
+            background: rgba(255, 255, 255, 0.05); 
+            color: var(--text-main); 
+            border-color: var(--border);
+        }
+
+        .btn-source::before {
+            background: linear-gradient(135deg, var(--primary), #00d9ff);
+        }
+
+        .btn-source:hover { 
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+            border-color: var(--primary);
+        }
+
+        .features-section {
+            padding: 50px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 60px;
+            letter-spacing: -1px;
+        }
+
+        .feature-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 24px; 
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glow-primary) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .feature-card:hover { 
+            border-color: var(--primary); 
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card i { 
+            font-size: 36px; 
+            margin-bottom: 20px; 
+            display: block; 
+            color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--glow-primary));
+        }
+
+        .feature-card h3 { 
+            font-size: 1.4rem; 
+            margin-bottom: 12px; 
+            font-weight: 800;
+        }
+
+        .feature-card p { 
+            color: var(--text-dim); 
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .specs {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            padding: 50px;
+            margin: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .specs::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--modrinth), var(--curseforge), var(--discord), var(--primary));
+        }
+
+        .spec-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 40px; 
+        }
+
+        .spec-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .spec-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.05);
+        }
+
+        .spec-label { 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            color: var(--text-dim); 
+            margin-bottom: 12px; 
+            font-weight: 700;
+        }
+
+        .spec-value { 
+            font-size: 1.3rem; 
+            font-weight: 800; 
+            color: var(--primary);
+        }
+
+        .modal-overlay {
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-body {
+            background: var(--surface);
+            padding: 60px;
+            border-radius: 24px;
+            border: 2px solid var(--primary);
+            width: 90%; 
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 60px var(--glow-primary);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-body h2 {
+            font-weight: 900;
+            font-size: 2rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary), #00d9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        select {
+            width: 100%; 
+            padding: 18px; 
+            background: var(--surface-light); 
+            color: var(--text-main);
+            border: 2px solid var(--border); 
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif; 
+            font-size: 16px; 
+            font-weight: 600;
+            margin: 32px 0; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--glow-primary);
+            outline: none;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), #00d9ff);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px var(--glow-primary);
+        }
+
+        .close-btn {
+            margin-top: 24px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--text-main);
+        }
+
+        footer { 
+            padding: 60px 0 40px; 
+            text-align: center; 
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .license-text { 
+            font-family: 'JetBrains Mono', monospace; 
+            font-size: 13px; 
+            color: var(--primary); 
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            .download-grid { grid-template-columns: 1fr; }
+            .modal-body { padding: 40px 30px; }
+            nav { flex-direction: column; gap: 20px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .specs { padding: 30px 20px; }
+            .license-text { 
+                font-size: 10px; 
+                letter-spacing: 0.3px;
+            }
+            footer { padding: 40px 0 30px; }
+            .brand {
+                font-size: 1.2rem;
+            }
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            .port-notice {
+                font-size: 12px;
+                padding: 12px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .license-text {
+                font-size: 9px;
+                letter-spacing: 0.2px;
+            }
+            .social-link {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--primary); 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #00d9ff; }
+    </style>
+</head>
+<body>
+
+<div class="bg-animation"></div>
+
+<div class="main-wrapper">
+    <div class="container">
+        <nav>
+            <div class="brand">
+                <i class="fa-solid fa-cube"></i> 
+                SECRET ROOMS UNOFFICIAL
+            </div>
+            <div class="nav-links">
+                <a href="https://youtube.com/@bay4lly" target="_blank" class="social-link youtube-link">
+                    <i class="fa-brands fa-youtube"></i> 
+                    YOUTUBE
+                </a>
+                <a href="https://discord.gg/mHQJwhW9HS" target="_blank" class="social-link discord-link">
+                    <i class="fa-brands fa-discord"></i> 
+                    DISCORD
+                </a>
+            </div>
+        </nav>
+
+        <main class="hero">
+            <div class="version-badges">
+                <span class="badge active">FORGE 1.20.1</span>
+                <span class="badge active">NEOFORGE 1.21.1</span>
+            </div>
+            
+            <h1>Secret Rooms Unofficial</h1>
+            
+            <p class="subtitle">
+                Advanced camouflage technology for Minecraft. Create invisible passages, hidden doors, 
+                and secret mechanisms that seamlessly blend into any environment.
+            </p>
+
+            <div class="port-notice">
+                <strong>Note:</strong> This is an unofficial port to newer Minecraft versions. The original mod was created by <strong>AbrarSyed</strong>.
+            </div>
+            
+            <div class="download-grid">
+                <a href="https://modrinth.com/mod/secret-rooms-unofficial" target="_blank" class="download-btn btn-modrinth">
+                    <i class="fa-solid fa-cube"></i>
+                    <span>MODRINTH</span>
+                </a>
+                
+                <a href="https://www.curseforge.com/minecraft/mc-mods/secret-rooms-unofficial" target="_blank" class="download-btn btn-curseforge">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>CURSEFORGE</span>
+                </a>
+                
+                <button onclick="toggleModal()" class="download-btn btn-source">
+                    <i class="fa-solid fa-code"></i>
+                    <span>SOURCE CODE</span>
+                </button>
+            </div>
+        </main>
+
+        <section class="features-section">
+            <h2 class="section-title">Core Features</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fa-solid fa-ghost"></i>
+                    <h3>Ghost Blocks</h3>
+                    <p>Walk through solid-looking walls. Perfect camouflage with zero collision detection for entities.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fa-solid fa-eye-slash"></i>
+                    <h3>One-Way Glass</h3>
+                    <p>See everything from the inside while remaining completely invisible from the outside.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fa-solid fa-door-closed"></i>
+                    <h3>Hidden Doors</h3>
+                    <p>Secret entrances that look exactly like the surrounding blocks when closed.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fa-solid fa-bolt"></i>
+                    <h3>Camouflaged Redstone</h3>
+                    <p>Levers, buttons, and pressure plates that blend seamlessly into any surface.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fa-solid fa-lock"></i>
+                    <h3>Secret Chests</h3>
+                    <p>Storage solutions that are indistinguishable from regular blocks.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fa-solid fa-stairs"></i>
+                    <h3>Secret Ladders</h3>
+                    <p>Climbable surfaces disguised as normal walls for hidden vertical access.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="specs">
+            <div class="spec-grid">
+                <div class="spec-item">
+                    <div class="spec-label">DEVELOPER</div>
+                    <div class="spec-value">bay4lly</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">PLATFORM</div>
+                    <div class="spec-value">Forge / NeoForge</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">LICENSE</div>
+                    <div class="spec-value">GPL v2.0</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">VERSIONS</div>
+                    <div class="spec-value">1.20.1 / 1.21.1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="license-text">
+                RELEASED UNDER GNU GENERAL PUBLIC LICENSE V2.0
+            </div>
+        </div>
+    </footer>
+</div>
+
+<div class="modal-overlay" id="srcModal">
+    <div class="modal-body">
+        <h2>Download Source</h2>
+        <p style="color: var(--text-dim); margin-top: 10px;">
+            Select your Minecraft version to download the source code.
+        </p>
+        
+        <select id="verSelect">
+            <option value="1.20.1">Minecraft 1.20.1 (Forge)</option>
+            <option value="1.21.1">Minecraft 1.21.1 (NeoForge)</option>
+        </select>
+
+        <button class="modal-btn" onclick="downloadSource()">
+            <i class="fa-solid fa-download"></i> 
+            DOWNLOAD ZIP
+        </button>
+        
+        <button onclick="toggleModal()" class="close-btn">Close</button>
+    </div>
+</div>
+
+<script>
+    function toggleModal() {
+        const modal = document.getElementById('srcModal');
+        if (modal.style.display === 'flex') {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        } else {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function downloadSource() {
+        const version = document.getElementById('verSelect').value;
+        const filename = `secretrooms_unofficial_${version}_source.zip`;
+        
+        const link = document.createElement('a');
+        link.href = filename;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        toggleModal();
+    }
+
+    document.getElementById('srcModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            toggleModal();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('srcModal');
+            if (modal.style.display === 'flex') {
+                toggleModal();
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
