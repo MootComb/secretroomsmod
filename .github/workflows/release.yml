@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    branches: [ main, master, 1.21.1 ]
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+  pull_request:
+    branches: [ main, master, 1.21.1 ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+    
+    - name: Build with Gradle
+      run: ./gradlew build
+    
+    - name: Get artifact name and version
+      id: get_artifact
+      run: |
+        ARTIFACT_ID=$(grep "^archives_base_name" gradle.properties | cut -d'=' -f2)
+        VERSION=$(grep "^mod_version" gradle.properties | cut -d'=' -f2)
+        echo "ARTIFACT_ID=$ARTIFACT_ID" >> $GITHUB_OUTPUT
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "TAG=v${VERSION}" >> $GITHUB_OUTPUT
+    
+    - name: Upload JAR artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.get_artifact.outputs.ARTIFACT_ID }}-Build-${{ github.run_number }}
+        path: build/libs/*.jar
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get_artifact.outputs.TAG }}
+        name: "${{ steps.get_artifact.outputs.ARTIFACT_ID }} ${{ steps.get_artifact.outputs.VERSION }}"
+        body: |
+          ### Installation:
+          1. Download `${{ steps.get_artifact.outputs.ARTIFACT_ID }}-${{ steps.get_artifact.outputs.VERSION }}.jar`
+          2. Place into `mods` folder
+          3. Enjoy!
+          
+          ### Build info:
+          - **Build #:** ${{ github.run_number }}
+          - **Commit:** ${{ github.sha }}
+          - **Branch:** ${{ github.ref_name }}
+        files: |
+          build/libs/*.jar
+        draft: false
+        prerelease: false
+        fail_on_unmatched_files: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
